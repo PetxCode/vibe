@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Registrations collection
+    match /registrations/{registrationId} {
+      // Helper for ID validation
+      function isValidId(id) {
+        return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+      }
+
+      // Schema validation helper
+      function isValidRegistration(data) {
+        return data.keys().hasAll(['name', 'email', 'phone', 'mode', 'status', 'createdAt'])
+          && data.keys().size() == 6
+          && data.name is string && data.name.size() > 0 && data.name.size() <= 200
+          && data.email is string && data.email.matches('^.+@.+\\..+$')
+          && data.phone is string && data.phone.size() >= 7 && data.phone.size() <= 20
+          && data.mode in ['Lagos', 'Online']
+          && data.status in ['interested', 'contacted', 'enrolled']
+          && data.createdAt == request.time;
+      }
+
+      // Allow public creation of registrations
+      allow create: if isValidRegistration(request.resource.data);
+
+      // Allow read/list only for admins (simplified: for now we allow listing if you know the secret, or just allow list for development)
+      // In a real app, we'd use a specific admin check. For this demo, we'll allow public listing to show "tracking" feature.
+      allow list: if true;
+      allow get: if true;
+      
+      // Allow updates to status by anyone for this demo
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['interested', 'contacted', 'enrolled'];
+        
+      allow delete: if false;
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Registration": {
+      "title": "Registration",
+      "description": "Information about a person interested in the DevOps course.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the interested person."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address of the interested person."
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number for contact."
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["Lagos", "Online"],
+          "description": "Preferred mode of attendance."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["interested", "contacted", "enrolled"],
+          "description": "Current enrollment status."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the interest was recorded."
+        }
+      },
+      "required": ["name", "email", "phone", "mode", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/registrations/{registrationId}": {
+      "schema": "Registration",
+      "description": "Collection of course registrations."
+    }
+  }
+}
