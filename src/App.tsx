@@ -861,8 +861,8 @@ export default function App() {
             <div>
               <div className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-6">Connect</div>
               <div className="flex flex-col gap-3 text-sm text-white/40">
-                <a href="#" className="hover:text-brand transition-colors">Twitter</a>
-                <a href="#" className="hover:text-brand transition-colors">LinkedIn</a>
+                <a href="https://x.com/PetxCode" className="hover:text-brand transition-colors">Twitter</a>
+                <a href="https://www.linkedin.com/in/peter-otunuya-518a10271/" className="hover:text-brand transition-colors">LinkedIn</a>
               </div>
             </div>
              <div>
