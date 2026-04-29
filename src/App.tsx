@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import peter from "../src/peter.png";
 import toast, { Toaster } from 'react-hot-toast';
 import { db } from './lib/firebase';
 import { 
@@ -205,6 +206,7 @@ export default function App() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isScrolled, setIsScrolled] = useState(false);
   const ITEMS_PER_PAGE = 3;
 
   const handlePaystackPayment = () => {
@@ -298,9 +300,15 @@ export default function App() {
       setDeletedIds(prev => Array.from(new Set([...prev, ...ids])));
     });
 
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
     return () => {
       unsubscribeReg();
       unsubscribeDel();
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -394,7 +402,7 @@ export default function App() {
             initial={{ opacity: 0, scale: 1.1 }}
             animate={{ opacity: 0.2, scale: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            src="input_file_0.png" 
+            src={peter} 
             alt="Peter Oti" 
             className="h-full w-full object-cover object-top grayscale brightness-75 mix-blend-luminosity"
             referrerPolicy="no-referrer"
@@ -407,18 +415,23 @@ export default function App() {
         
         <div className="absolute inset-0 -z-3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent" />
 
-        <nav className="absolute top-0 left-0 w-full p-8 flex justify-between items-center z-10">
-          <div className="flex items-center gap-2 font-display text-2xl font-bold tracking-tighter cursor-pointer group" onClick={() => setIsBioOpen(true)}>
-            <div className="w-8 h-8 bg-brand rounded-sm flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-              <Terminal className="w-5 h-5" />
+        <nav className={cn(
+          "fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 md:px-12 lg:px-24",
+          isScrolled ? "py-4 bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-white/5" : "py-8 bg-transparent"
+        )}>
+          <div className="flex justify-between items-center max-w-[1400px] mx-auto w-full">
+            <div className="flex items-center gap-2 font-display text-2xl font-bold tracking-tighter cursor-pointer group" onClick={() => setIsBioOpen(true)}>
+              <div className="w-8 h-8 bg-brand rounded-sm flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                <Terminal className="w-5 h-5" />
+              </div>
+              VIBE WITH<span className="text-brand">Peter Oti</span>
+              <span className="ml-2 text-[8px] opacity-0 group-hover:opacity-100 transition-opacity bg-white/10 px-2 py-0.5 rounded text-white font-mono tracking-widest uppercase">View Bio</span>
             </div>
-            VIBE WITH<span className="text-brand">Peter Oti</span>
-            <span className="ml-2 text-[8px] opacity-0 group-hover:opacity-100 transition-opacity bg-white/10 px-2 py-0.5 rounded text-white font-mono tracking-widest uppercase">View Bio</span>
-          </div>
-          <div className="hidden md:flex gap-8 text-[11px] font-bold uppercase tracking-[0.2em] text-white/40">
-            <a href="#curriculum" className="hover:text-white transition-colors">Curriculum</a>
-            <a href="#register" className="hover:text-white transition-colors">Enrollment</a>
-            <a href="#leads" className="hover:text-white transition-colors">Interests</a>
+            <div className="hidden md:flex gap-8 text-[11px] font-bold uppercase tracking-[0.2em] text-white/40">
+              <a href="#curriculum" className="hover:text-white transition-colors">Curriculum</a>
+              <a href="#register" className="hover:text-white transition-colors">Enrollment</a>
+              <a href="#leads" className="hover:text-white transition-colors">Interests</a>
+            </div>
           </div>
         </nav>
 
@@ -437,7 +450,7 @@ export default function App() {
             className="font-display text-6xl md:text-8xl lg:text-[120px] font-bold leading-[0.85] tracking-tighter"
           >
             IDEA TO SAAS <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-orange-300">IN 3 DAYS</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-orange-300 pr-3">IN 3 DAYS</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -849,7 +862,7 @@ export default function App() {
               VIBE WITH<span className="text-brand">Peter Oti</span>
             </div>
             <p className="text-white/30 text-sm leading-relaxed">
-            Leading founders and developers to ship real SaaS products in days. Stop waiting — start building.
+            Leading founders and developers to ship real SaaS products in days. Stop waiting. <br/> Start Building!
             </p>
           </div>
           
@@ -910,7 +923,7 @@ export default function App() {
               {/* Photo Side */}
               <div className="w-full md:w-2/5 h-64 md:h-auto bg-[#0A0A0A] relative group">
                 <img 
-                  src="input_file_0.png" 
+                  src={peter}
                   alt="Peter Oti" 
                   className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all duration-1000"
                 />
@@ -936,12 +949,12 @@ export default function App() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
-                        'Cloud Architecture (AWS/Azure)',
-                        'Infrastructure as Code (Terraform/Ansible)',
-                        'Container Orchestration (Kubernetes)',
-                        'Security & DevSecOps',
-                        'Scalable Backend Systems',
-                        'CI/CD Pipeline Optimization'
+                        'Fullstack SaaS Development',
+                        'Idea-to-MVP Shipping',
+                        'React & Modern Frontend',
+                        'Node.js & Scalable APIs',
+                        'Payment Gateways (Paystack/Stripe)',
+                        'Automated CI/CD & Cloud Ops'
                       ].map((skill, index) => (
                         <div key={skill} className="flex items-center gap-3 p-4 border border-white/5 bg-white/[0.02]">
                           <div className="w-1.5 h-1.5 rounded-full bg-brand" />
@@ -957,7 +970,7 @@ export default function App() {
                       <h4 className="text-xs font-bold uppercase tracking-[0.3em] text-white/40">Experience</h4>
                     </div>
                     <p className="text-lg text-white/50 leading-relaxed font-light mb-8">
-                      With over a decade of hands-on experience in the DevOps landscape, Peter Oti has transformed infrastructure for startups and global enterprises alike. He is dedicated to empowering Nigerian tech talent with the technical rigor and strategic mindset required for modern cloud operations.
+                      Peter Oti is a seasoned MERN stack and AI Engineer with a decade of experience shipping high-impact SaaS platforms. He specializes in everything coding and now leading on "Vibe Coding" the art of moving from raw idea to a production-ready product in record time, Empowering developers and founders to build real value without the fluff.
                     </p>
                     <div className="flex items-center gap-8">
                       <div className="flex flex-col">
@@ -965,8 +978,8 @@ export default function App() {
                         <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Years Experience</span>
                       </div>
                       <div className="flex flex-col border-l border-white/10 pl-8">
-                        <span className="text-4xl font-display font-bold text-white tracking-tighter">50+</span>
-                        <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Teams Trained</span>
+                        <span className="text-4xl font-display font-bold text-white tracking-tighter">100+</span>
+                        <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">SaaS Projects</span>
                       </div>
                     </div>
                   </section>
